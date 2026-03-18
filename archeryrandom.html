@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Archery Random</title>
+  <style>body{background:#8bc34a;margin:0;}canvas{display:block;margin:auto;background:#c8e6c9;}</style>
+</head>
+<body>
+<canvas id="gameCanvas" width="500" height="300"></canvas>
+<script>
+const canvas=document.getElementById("gameCanvas");const ctx=canvas.getContext("2d");
+let arrow={x:50,y:150,w:20,h:5,dx:0};let target={x:400,y:100,w:50,h:100};let score=0;
+document.addEventListener("keydown",e=>{if(e.key==="ArrowUp")arrow.y-=10;if(e.key==="ArrowDown")arrow.y+=10;if(e.key===" "){arrow.dx=5;}});
+function draw(){
+ ctx.clearRect(0,0,500,300);
+ ctx.fillStyle="brown";ctx.fillRect(arrow.x,arrow.y,arrow.w,arrow.h);
+ ctx.fillStyle="red";ctx.fillRect(target.x,target.y,target.w,target.h);
+ arrow.x+=arrow.dx;
+ if(arrow.x>500){arrow.x=50;arrow.dx=0;}
+ if(arrow.x+arrow.w>target.x&&arrow.y>target.y&&arrow.y<target.y+target.h){score++;arrow.x=50;arrow.dx=0;}
+ ctx.fillStyle="black";ctx.font="20px Arial";ctx.fillText("Score:"+score,10,20);
+}
+setInterval(draw,30);
+</script>
+</body>
+</html>
