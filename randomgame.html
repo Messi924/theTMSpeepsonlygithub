@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game 1 - Click the Button</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+    }
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      border: 2px solid #333;
+      background: #fff;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+    #clickBtn {
+      position: absolute;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #score, #timer {
+      font-size: 20px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Game 1: Click the Button!</h1>
+  <p id="score">Score: 0</p>
+  <p id="timer">Time left: 30</p>
+  <div id="gameArea">
+    <button id="clickBtn">Click Me!</button>
+  </div>
+
+  <script>
+    let score = 0;
+    let timeLeft = 30;
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const button = document.getElementById("clickBtn");
+    const gameArea = document.getElementById("gameArea");
+
+    // Move button to random position
+    function moveButton() {
+      const maxX = gameArea.clientWidth - button.offsetWidth;
+      const maxY = gameArea.clientHeight - button.offsetHeight;
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      button.style.left = randomX + "px";
+      button.style.top = randomY + "px";
+    }
+
+    button.addEventListener("click", () => {
+      score++;
+      scoreDisplay.textContent = "Score: " + score;
+      moveButton();
+    });
+
+    // Timer countdown
+    const countdown = setInterval(() => {
+      timeLeft--;
+      timerDisplay.textContent = "Time left: " + timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        button.disabled = true;
+        timerDisplay.textContent = "Game Over!";
+        alert("Game Over! Your score is " + score);
+      }
+    }, 1000);
+
+    // Start with button in random place
+    moveButton();
+  </script>
+</body>
+</html>
