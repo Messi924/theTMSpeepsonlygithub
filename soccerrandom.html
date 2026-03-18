@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Soccer Random</title>
+  <style>
+    body { background:#2e7d32; margin:0; }
+    canvas { display:block; margin:auto; background:#4caf50; }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="500" height="300"></canvas>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let ball = { x:250, y:150, dx:3, dy:2, r:10 };
+    let player = { x:30, y:130, w:10, h:40 };
+    let score = 0;
+
+    document.addEventListener("keydown", e=>{
+      if(e.key==="ArrowUp" && player.y>0) player.y-=10;
+      if(e.key==="ArrowDown" && player.y<canvas.height-player.h) player.y+=10;
+    });
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle="white"; ctx.fillRect(player.x,player.y,player.w,player.h);
+      ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fillStyle="black"; ctx.fill();
+      ball.x+=ball.dx; ball.y+=ball.dy;
+      if(ball.y<0||ball.y>canvas.height) ball.dy*=-1;
+      if(ball.x<0){ alert("Game Over! Score:"+score); document.location.reload(); }
+      if(ball.x>canvas.width){ score++; ball.x=250; ball.y=150; }
+      if(ball.x<player.x+player.w && ball.y>player.y && ball.y<player.y+player.h){ ball.dx*=-1; }
+      ctx.fillStyle="yellow"; ctx.font="20px Arial"; ctx.fillText("Score:"+score,10,20);
+    }
+    setInterval(draw,30);
+  </script>
+</body>
+</html>
