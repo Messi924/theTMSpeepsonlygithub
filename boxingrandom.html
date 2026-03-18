@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Boxing Random</title>
+  <style>body{background:#e53935;margin:0;}canvas{display:block;margin:auto;background:#ffcdd2;}</style>
+</head>
+<body>
+<canvas id="gameCanvas" width="500" height="300"></canvas>
+<script>
+const canvas=document.getElementById("gameCanvas");const ctx=canvas.getContext("2d");
+let player={x:50,y:150,w:30,h:30};let enemy={x:400,y:150,w:30,h:30};let score=0;
+document.addEventListener("keydown",e=>{if(e.key==="ArrowUp")player.y-=10;if(e.key==="ArrowDown")player.y+=10;if(e.key===" "){if(Math.abs(player.x-enemy.x)<40&&Math.abs(player.y-enemy.y)<40){score++;enemy.x=Math.random()*400+50;enemy.y=Math.random()*200;}}});
+function draw(){
+ ctx.clearRect(0,0,500,300);
+ ctx.fillStyle="blue";ctx.fillRect(player.x,player.y,player.w,player.h);
+ ctx.fillStyle="black";ctx.fillRect(enemy.x,enemy.y,enemy.w,enemy.h);
+ ctx.fillStyle="white";ctx.font="20px Arial";ctx.fillText("Score:"+score,10,20);
+}
+setInterval(draw,30);
+</script>
+</body>
+</html>
