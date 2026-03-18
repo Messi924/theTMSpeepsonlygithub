@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Escape Road City 2</title>
+  <style>
+    body {
+      margin: 0;
+      background: #333;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      background: #555;
+      border: 4px solid #222;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const carWidth = 40;
+    const carHeight = 60;
+    let carX = canvas.width / 2 - carWidth / 2;
+    let carY = canvas.height - carHeight - 20;
+    let speed = 5;
+    let score = 0;
+    let traffic = [];
+    let police = { x: canvas.width / 2 - carWidth / 2, y: -80, width: carWidth, height: carHeight };
+
+    // Draw player car
+    function drawCar(x, y, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, carWidth, carHeight);
+    }
+
+    // Create traffic cars
+    function createTraffic() {
+      const lane = Math.floor(Math.random() * 4);
+      const x = lane * 100 + 30;
+      traffic.push({ x, y: -60, width: carWidth, height: carHeight });
+    }
+
+    // Update traffic
+    function updateTraffic() {
+      for (let t of traffic) {
+        t.y += speed;
+      }
+      traffic = traffic.filter(t => t.y < canvas.height);
+    }
+
+    // Police AI chase
+    function updatePolice() {
+      police.y += speed * 0.8;
+      if (police.x < carX) police.x += 2;
+      if (police.x > carX) police.x -= 2;
+      if (police.y > canvas.height) {
+        police.y = -80;
+        police.x = Math.random() * (canvas.width - carWidth);
+      }
+    }
+
+    // Collision detection
+    function checkCollision(obj) {
+      return (
+        carX < obj.x + obj.width &&
+        carX + carWidth > obj.x &&
+        carY < obj.y + obj.height &&
+        carY + carHeight > obj.y
+      );
+    }
+
+    // Draw score
+    function drawScore() {
+      ctx.fillStyle = "white";
+      ctx.font = "20px Arial";
+      ctx.fillText("Score: " + score, 10, 30);
+    }
+
+    // Game loop
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Road background
+      ctx.fillStyle = "#444";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Player car
+      drawCar(carX, carY, "red");
+
+      // Traffic
+      updateTraffic();
+      for (let t of traffic) {
+        drawCar(t.x, t.y, "blue");
+        if (checkCollision(t)) {
+          alert("Crashed into traffic! Final Score: " + score);
+          document.location.reload();
+        }
+      }
+
+      // Police
+      updatePolice();
+      drawCar(police.x, police.y, "black");
+      if (checkCollision(police)) {
+        alert("Caught by police! Final Score: " + score);
+        document.location.reload();
+      }
+
+      // Score
+      score++;
+      drawScore();
+    }
+
+    setInterval(gameLoop, 100);
+    setInterval(createTraffic, 1500);
+
+    // Controls
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft" && carX > 0) carX -= speed * 2;
+      if (e.key === "ArrowRight" && carX < canvas.width - carWidth) carX += speed * 2;
+      if (e.key === "ArrowUp" && carY > 0) carY -= speed * 2;
+      if (e.key === "ArrowDown" && carY < canvas.height - carHeight) carY += speed * 2;
+    });
+  </script>
+</body>
+</html>
